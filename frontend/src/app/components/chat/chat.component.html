@@ -1,0 +1,110 @@
+<div class="chat-layout" [class.sidebar-open]="sidebarOpen">
+  <!-- Sidebar -->
+  <aside class="sidebar" [class.open]="sidebarOpen">
+    <div class="sidebar-header">
+      <div class="brand">
+        <span class="brand-icon">◈</span>
+        <span class="brand-name">RAG<span class="accent">AI</span></span>
+      </div>
+      <button class="btn-icon sidebar-toggle-inner" (click)="toggleSidebar()" title="Close sidebar">
+        ‹
+      </button>
+    </div>
+
+    <!-- Document Upload -->
+    <app-document-upload></app-document-upload>
+
+    <!-- Document List -->
+    <app-document-list
+      [selectedDocumentIds]="selectedDocumentIds"
+      (documentToggled)="toggleDocumentSelection($event)">
+    </app-document-list>
+  </aside>
+
+  <!-- Main Chat Area -->
+  <main class="chat-main">
+    <header class="chat-header">
+      <button class="btn-icon sidebar-toggle" (click)="toggleSidebar()" title="Toggle sidebar">
+        <span class="menu-icon">☰</span>
+      </button>
+      <div class="header-info">
+        <h1 class="header-title">RAG Chatbot</h1>
+        <span class="header-status" [class.active]="hasDocuments">
+          {{ hasDocuments ? documents.length + ' doc' + (documents.length > 1 ? 's' : '') + ' loaded' : 'No documents' }}
+        </span>
+      </div>
+      <div class="header-actions">
+        <button class="btn-secondary" (click)="clearChat()" [disabled]="messages.length === 0">
+          Clear chat
+        </button>
+      </div>
+    </header>
+
+    <!-- Messages area -->
+    <div class="messages-container" #messagesContainer>
+      <!-- Empty state -->
+      <div *ngIf="messages.length === 0" class="empty-state">
+        <div class="empty-icon">◈</div>
+        <h2 class="empty-title">Ask anything about your documents</h2>
+        <p class="empty-subtitle">Upload documents in the sidebar, then ask questions to get AI-powered answers with source citations.</p>
+        
+        <div class="suggestions-grid" *ngIf="suggestions.length > 0">
+          <button
+            *ngFor="let s of suggestions"
+            class="suggestion-chip"
+            (click)="useSuggestion(s)">
+            {{ s }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Messages -->
+      <div class="messages-list" *ngIf="messages.length > 0">
+        <div
+          *ngFor="let message of messages; trackBy: trackByMessage"
+          class="message-wrapper"
+          [class.user-wrapper]="message.role === 'user'"
+          [class.assistant-wrapper]="message.role === 'assistant'">
+          
+          <app-message-bubble [message]="message"></app-message-bubble>
+          
+          <app-sources-card
+            *ngIf="message.role === 'assistant' && message.sources?.length"
+            [sources]="message.sources!">
+          </app-sources-card>
+        </div>
+      </div>
+    </div>
+
+    <!-- Input area -->
+    <div class="input-area">
+      <div class="input-container" [class.loading]="isLoading">
+        <textarea
+          #queryInput
+          class="query-input"
+          [(ngModel)]="query"
+          (keydown)="onKeyDown($event)"
+          placeholder="Ask a question about your documents..."
+          rows="1"
+          [disabled]="isLoading">
+        </textarea>
+        <button
+          class="send-btn"
+          (click)="sendMessage()"
+          [disabled]="!query.trim() || isLoading"
+          [class.loading]="isLoading">
+          <span *ngIf="!isLoading" class="send-icon">▶</span>
+          <span *ngIf="isLoading" class="loading-dots">
+            <span></span><span></span><span></span>
+          </span>
+        </button>
+      </div>
+      <p class="input-hint">
+        Press Enter to send · Shift+Enter for new line
+        <span *ngIf="selectedDocumentIds.length > 0" class="filter-hint">
+          · Filtering {{ selectedDocumentIds.length }} document(s)
+        </span>
+      </p>
+    </div>
+  </main>
+</div>

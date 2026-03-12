@@ -31,7 +31,7 @@ backend/logs/
 chroma_data/
 .chroma/
 chromadb/
-backend/chroma_data/
+backend/chroma/
 backend/.chroma/
 backend/chromadb/
 
