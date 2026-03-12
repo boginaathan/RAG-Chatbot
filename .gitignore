@@ -31,6 +31,9 @@ backend/logs/
 chroma_data/
 .chroma/
 chromadb/
+backend/chroma_data/
+backend/.chroma/
+backend/chromadb/
 
 # ── Angular Build Output ──────────────────────────────────────
 frontend/dist/
