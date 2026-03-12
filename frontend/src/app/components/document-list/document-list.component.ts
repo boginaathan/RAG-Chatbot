@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Output, EventEmitter, Input } from '@angular/core';
 import { DocumentService, Document } from '../../services/document.service';
-
+import { ChatService } from '../../services/chat.service';
 @Component({
   selector: 'app-document-list',
   template: `
@@ -39,9 +39,10 @@ import { DocumentService, Document } from '../../services/document.service';
         </div>
       </div>
       
-      <div class="filter-hint" *ngIf="selectedDocumentIds.length > 0">
-        <span>Filtering by {{ selectedDocumentIds.length }} document(s)</span>
-        <button (click)="clearSelection()">Clear</button>
+      <div class="filter-hint" *ngIf="documents.length > 0">
+        <button class="btn-secondary" (click)="clearSelection()">
+          Clear document(s) ?
+        </button>
       </div>
     </div>
   `,
@@ -125,7 +126,7 @@ import { DocumentService, Document } from '../../services/document.service';
       border-radius: 8px;
       font-size: 11px;
       color: var(--accent);
-      
+      width:122px;
       button {
         background: none;
         border: none;
@@ -141,7 +142,7 @@ export class DocumentListComponent {
   @Input() selectedDocumentIds: string[] = [];
   @Output() documentToggled = new EventEmitter<string>();
 
-  constructor(public documentService: DocumentService) {}
+  constructor(public documentService: DocumentService, private chatService: ChatService) { }
 
   get documents(): Document[] {
     return this.documentService.getDocuments();
@@ -156,7 +157,19 @@ export class DocumentListComponent {
   }
 
   clearSelection(): void {
-    this.selectedDocumentIds.forEach(id => this.documentToggled.emit(id));
+    if (confirm("Are you sure you want to clear documents?")) {
+      this.documentService.resetCollection().subscribe({
+        next: (res) => {
+          this.selectedDocumentIds = [];
+          this.documentService.removeAllDocument();
+          this.chatService.triggerClearChat();
+          console.log('Collection cleared', res);
+        },
+        error: (err) => {
+          console.error(err);
+        }
+      });
+    }
   }
 
   deleteDoc(event: MouseEvent, doc: Document): void {

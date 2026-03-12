@@ -50,7 +50,8 @@ export interface StreamEvent {
 @Injectable({ providedIn: 'root' })
 export class ChatService {
   private apiUrl = environment.apiUrl;
-
+  private clearChatSource = new Subject<void>();
+  clearChat$ = this.clearChatSource.asObservable();
   constructor(private http: HttpClient) {}
 
   sendMessage(
@@ -123,5 +124,9 @@ export class ChatService {
   private handleError(error: HttpErrorResponse) {
     const message = error.error?.error || error.message || 'Unknown error occurred';
     return throwError(() => new Error(message));
+  }
+
+  triggerClearChat() {
+    this.clearChatSource.next();
   }
 }

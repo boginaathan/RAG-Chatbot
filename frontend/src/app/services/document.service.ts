@@ -72,6 +72,14 @@ export class DocumentService {
     );
   }
 
+  resetCollection(): Observable<any> {
+    return this.http.post(`${this.apiUrl}/documents/reset-collection`, '').pipe(
+      map(result => {
+        return result;
+      })
+    );
+  }
+
   getDocuments(): Document[] {
     return this.documentsSubject.getValue();
   }
@@ -84,6 +92,10 @@ export class DocumentService {
   private removeDocument(id: string): void {
     const current = this.documentsSubject.getValue();
     this.documentsSubject.next(current.filter(d => d.id !== id));
+  }
+
+  removeAllDocument(): void {
+    this.documentsSubject.next([]);
   }
 
   formatFileSize(bytes: number): string {

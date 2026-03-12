@@ -37,6 +37,9 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.documentService.documents$.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.loadSuggestions();
     });
+    this.chatService.clearChat$.subscribe(() => {
+      this.clearChat();
+    });
   }
 
   ngAfterViewChecked(): void {
