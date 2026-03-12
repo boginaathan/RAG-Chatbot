@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: '/api'
+  apiUrl: 'https://rag-chatbot-backend-d42l.onrender.com/api'
 };
