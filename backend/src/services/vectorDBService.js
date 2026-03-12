@@ -36,30 +36,21 @@ const memoryStore = {
 export async function initVectorDB() {
   const host = process.env.CHROMA_HOST || 'localhost';
   const port = parseInt(process.env.CHROMA_PORT) || 8000;
+  const ssl  = process.env.CHROMA_SSL === 'true';
 
   try {
     const { ChromaClient } = await import('chromadb');
 
-    // ChromaDB JS client v1.9+ accepts both old and new constructor forms.
-    // We try the explicit host/port form first (most compatible with v2 server).
-    const clientConfig = { host, port };
+    const client = ssl
+      ? new ChromaClient({ path: `https://${host}` })
+      : new ChromaClient({ host, port });
 
-    // Some versions need the full URL string instead
-    const client = new ChromaClient(clientConfig);
-
-    // Test connectivity — throws if server is unreachable
     await client.heartbeat();
-
     vectorStore = client;
-    logger.info(`✅ Connected to ChromaDB at ${host}:${port}`);
-
-    // Pre-warm the collection
+    logger.info(`✅ Connected to ChromaDB at ${host}`);
     await getOrCreateCollection();
   } catch (error) {
-    logger.warn(`⚠️  ChromaDB not available (${error.message}). Using in-memory store.`);
-    logger.warn('   Data will NOT persist between server restarts.');
-    logger.warn(`   To fix: make sure ChromaDB is running on ${host}:${port}`);
-    logger.warn('   Start it with: chroma run --host localhost --port 8000');
+    logger.warn(`⚠️  ChromaDB not available: ${error.message}. Using in-memory store.`);
     useInMemory = true;
   }
 }
