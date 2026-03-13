@@ -158,7 +158,7 @@ async function huggingfaceEmbedding(text) {
   if (!apiKey) throw new Error('HUGGINGFACE_API_KEY not set in .env');
 
   const response = await fetch(
-    `https://api-inference.huggingface.co/pipeline/feature-extraction/${model}`,
+    `https://router.huggingface.co/pipeline/feature-extraction/${model}`,
     {
       method: 'POST',
       headers: {
