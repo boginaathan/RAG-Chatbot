@@ -21,6 +21,7 @@ package-lock.json
 # ── Uploaded Documents ────────────────────────────────────────
 backend/uploads/
 uploads/
+document/
 
 # ── Logs ──────────────────────────────────────────────────────
 logs/
