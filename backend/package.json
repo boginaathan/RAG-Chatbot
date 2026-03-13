@@ -1,7 +1,7 @@
 {
-  "name": "rag-chatbot-backend",
+  "name": "infoassist-backend",
   "version": "1.0.0",
-  "description": "RAG Chatbot Backend — Groq + Anthropic + Ollama",
+  "description": "InfoAssist Backend — Groq + Anthropic + Ollama",
   "main": "src/server.js",
   "type": "module",
   "scripts": {

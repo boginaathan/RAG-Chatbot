@@ -4,7 +4,7 @@
     <div class="sidebar-header">
       <div class="brand">
         <span class="brand-icon">◈</span>
-        <span class="brand-name">RAG<span class="accent">AI</span></span>
+        <span class="brand-name">Info<span class="accent">Assist</span></span>
       </div>
       <button class="btn-icon sidebar-toggle-inner" (click)="toggleSidebar()" title="Close sidebar">
         ‹
@@ -28,7 +28,7 @@
         <span class="menu-icon">☰</span>
       </button>
       <div class="header-info">
-        <h1 class="header-title">RAG Chatbot</h1>
+        <h1 class="header-title">InfoAssist Chatbot</h1>
         <span class="header-status" [class.active]="hasDocuments">
           {{ hasDocuments ? documents.length + ' doc' + (documents.length > 1 ? 's' : '') + ' loaded' : 'No documents' }}
         </span>
